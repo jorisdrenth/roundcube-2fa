@@ -733,15 +733,15 @@ class kolab_2fa extends rcube_plugin
             if (method_exists($driver, 'get_provisioning_uri')) {
                 try {
                     $uri = $driver->get_provisioning_uri();
+                    $writer = new Endroid\QrCode\Writer\PngWriter();
 
-                    $qr = new Endroid\QrCode\QrCode();
-                    $qr->setText($uri)
-                       ->setSize(240)
-                       ->setPadding(10)
-                       ->setErrorCorrection('high')
-                       ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
-                       ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
-                    $data['qrcode'] = base64_encode($qr->get());
+                    $qr = new Endroid\QrCode\QrCode($uri);
+                    $qr->setSize(240)
+                        ->setErrorCorrectionLevel(Endroid\QrCode\ErrorCorrectionLevel::High)
+                        ->setForegroundColor(new Endroid\QrCode\Color\Color(0, 0, 0))
+                        ->setBackgroundColor(new Endroid\QrCode\Color\Color(255, 255, 255));
+                    $result = $writer->write($qr, null, null);
+                    $data['qrcode'] = base64_encode($result->getString());
                 } catch (Exception $e) {
                     rcube::raise_error($e, true, false);
                 }
