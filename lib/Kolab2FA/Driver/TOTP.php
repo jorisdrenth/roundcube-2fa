@@ -98,7 +98,7 @@ class TOTP extends Base
 
         // Pass a window to indicate the maximum timeslip between client (mobile
         // device) and server.
-        $pass = $this->backend->verify($code, (int) $timestamp, 150);
+        $pass = $this->backend->verify($code, (int) $timestamp, 29);
 
         // try all codes from $timestamp till now
         if (!$pass && $timestamp) {
